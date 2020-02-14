@@ -11,7 +11,8 @@ public class MyToKenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
 	private final static IntWritable one = new IntWritable(1);
 	Text word = new Text();
 
-	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+	public void map(Object key, Text value, Context context)
+			throws IOException, InterruptedException {
 		StringTokenizer st = new StringTokenizer(value.toString());
 		while (st.hasMoreElements()) {
 			word.set(st.nextToken());
