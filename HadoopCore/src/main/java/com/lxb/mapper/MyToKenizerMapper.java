@@ -13,7 +13,7 @@ public class MyToKenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
 
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
-		StringTokenizer st = new StringTokenizer(value.toString());
+		StringTokenizer st = new StringTokenizer(value.toString(), ",");
 		while (st.hasMoreElements()) {
 			word.set(st.nextToken());
 			context.write(word, one);
