@@ -1,0 +1,9 @@
+add jar './HadoopCore-jar-with-dependencies.jar';
+
+create temporary function self_max as 'com.lxb.udaf.DIYMaxUdaf';
+
+select self_max(score) from user_score;
+
+create temporary function self_min as 'com.lxb.udaf.DIYMinUdaf';
+
+select self_min(score) from user_score;
