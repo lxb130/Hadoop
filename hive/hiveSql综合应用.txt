@@ -1,0 +1,13 @@
+16题
+select depart,come_year,total_money from
+(
+select depart,come_year,sum(come_money) as total_money from
+(
+select employee.id,depart,come_money,come_year  from
+(select id,depart from employee_info) employee
+join
+(select id,come_money,substring(come_month,1,4) as come_year from income_info) income on employee.id=income.id 
+) base_info 
+group by come_year,depart
+) sum_info
+order by come_year desc,total_money asc;
