@@ -46,7 +46,7 @@ from income_dynamic
 where substring(come_time,1,7)='2018-06';
 
 
-select id,name,add_money_topn,if(add_money_topn=1,"长得最多",null) as add_money_top1,add_money_rate_topn,if(add_money_rate_topn=1,"涨幅最大",null) as add_rate_top1 from
+select id,name,add_money_topn,if(add_money_topn=1,"长得最多",null) as add_money_top1,add_money_rate_topn,if(add_money_rate_topn=1,"涨幅最大",null) as add_money_top1 from
 (select id,name,rank() over(order by add_money) add_money_topn, rank() over(order by add_money_rate) add_money_rate_topn from
 (select id,
 name,
