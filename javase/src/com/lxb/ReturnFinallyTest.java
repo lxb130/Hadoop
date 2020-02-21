@@ -1,29 +1,24 @@
 package com.lxb;
 
 public class ReturnFinallyTest {
+	public static int i= 1;
 
-	public static String test() {
+	public static int ret() {
 		try {
-			return new String("执行return");
+			i = 2;
+			return (++i);
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			System.out.println("执行finally");
-			return new String("执行");
+			i = 10;
+			System.out.println("finally i=" + i);
 		}
-
-	}
-
-	public static int test1() {
-		int i = 1;
-		try {
-			return i=5;
-		} finally {
-			return i=6;
-		}
+		return 0;
 	}
 
 	public static void main(String[] args) {
-		int i=test1();	
-		System.out.println(i);
+		System.out.println("ret返回的值=" + ret());
+		System.out.println("最后的i值=" + i);
 	}
 
 }
