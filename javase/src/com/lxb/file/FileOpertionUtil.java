@@ -12,6 +12,7 @@ public class FileOpertionUtil {
 			return null;
 		}
 		List<String> resultList = new ArrayList<>();
+		//是文件则直接添加，若为文件夹则递归遍历
 		if (fileObject.isDirectory()) {
 			File[] subFileArray = fileObject.listFiles();
 			for (File oneFile : subFileArray) {
