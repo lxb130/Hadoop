@@ -1,0 +1,52 @@
+1.确定数据源
+expo_detail_table  商品曝光表
+
+click_detail_table  用户点击表
+
+
+create table if not exists result1_table
+(
+user_id string,
+item_id string,
+expo_cnt bigint comment'曝光数量',
+click_cnt bigint comment'点击数量'
+)
+
+
+create table if not exists result2_table
+(
+item_id string,
+uv_ctr double comment'uv曝光点击率',
+uv_ctr_rank bigint comment'uv曝光点击率排名',
+pv_ctr double comment'pv曝光点击率',
+pv_ctr_rank bigint comment'pv曝光点击率排名'
+
+)
+
+
+第一题
+insert overwrite table result1_table
+select expo.user_id,expo.item_id,coalesce(expo_count,0),coalesce(click_count,0) from (
+(select user_id,item_id,count(1) as expo_count from expo_detail_table group by user_id,item_id) 
+expo left join
+(select user_id,item_id,count(1) as click_count from  click_detail_table group by user_id,item_id) 
+click  on expo.user_id=click.user_id)
+;
+
+第二题
+
+
+insert overwrite table result2_table
+  select 
+     item_id,
+     uv_ctr,
+     dense_rank() OVER(ORDER BY uv_ctr DESC) uv_ctr_rank,
+     pv_ctr,
+     dense_rank() OVER(ORDER BY pv_ctr DESC) pv_ctr_rank
+  from 
+  (
+     select item_id,
+            sum(if(click_cnt>0,1,0))/sum(if(expo_cnt>0,1,0)) as uv_ctr,
+            sum(click_cnt)/sum(expo_cnt) as pv_ctr
+     from result1_table group by item_id
+  ) middle
