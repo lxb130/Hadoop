@@ -2,7 +2,7 @@ package com.lxb
 
 import org.apache.spark.{SparkConf, SparkContext}
 
-object Optation {
+object Operator {
 
   var conf = new SparkConf()
   conf.setAppName("算子练习")
