@@ -1,5 +1,4 @@
-package com.lxb
-
+package com.lxb.operator
 
 import org.apache.spark.{SparkConf, SparkContext}
 

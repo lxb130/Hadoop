@@ -1,6 +1,5 @@
-package com.lxb
+package com.lxb.operator
 
-import com.lxb.Operator1.sc
 import org.apache.spark.{SparkConf, SparkContext}
 
 object Operator2 {
