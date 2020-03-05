@@ -1,0 +1,187 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- 我是谁 -->
+	<groupId>com.tianliangedu.job001</groupId>
+	<artifactId>WebSpiderAdvanced4Job001</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<!-- 配置maven多环境属性，方便灵活打包发布 -->
+	<profiles>
+		<profile>
+			<id>master</id>
+			<!-- 默认激活开发配制，将相应的spider.properties来替换旧的spider.properties文件 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<env>master</env>
+				<ant-properties-path>src/main/resources/conf/master/jdbc.properties</ant-properties-path>
+				<ant-properties-path-spider>src/main/resources/conf/master/spider.properties</ant-properties-path-spider>
+				<ant-properties-path-log4j>src/main/resources/conf/master/log4j.properties</ant-properties-path-log4j>
+			</properties>
+		</profile>
+		<profile>
+			<id>slave</id>
+			<properties>
+				<env>slave</env>
+				<ant-properties-path>src/main/resources/conf/slave/jdbc.properties</ant-properties-path>
+				<ant-properties-path-spider>src/main/resources/conf/slave/spider.properties</ant-properties-path-spider>
+				<ant-properties-path-log4j>src/main/resources/conf/slave/log4j.properties</ant-properties-path-log4j>
+			</properties>
+		</profile>
+	</profiles>
+
+	<!-- 从哪里下载依赖包，仓库源配置 -->
+	<!-- 首先配置仓库的服务器位置,首选阿里云，也可以配置镜像方式，效果雷同 -->
+	<repositories>
+		<repository>
+			<id>Nexus-aliyun</id>
+			<name>Nexus aliyun</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<!-- 依赖有哪些 -->
+	<dependencies>
+		<!-- httpclient依赖包 -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+
+		<!-- log4j依赖添加 -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<!-- jsoup依赖添加 -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.11.2</version>
+		</dependency>
+
+		<!-- mysql jdbc 依赖 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.12</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>transport</artifactId>
+			<version>6.3.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.7</version>
+		</dependency>
+
+
+		<!-- log -->
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.25</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+		<dependency>
+			<groupId>io.searchbox</groupId>
+			<artifactId>jest</artifactId>
+			<version>6.3.0</version>
+		</dependency>
+
+	</dependencies>
+	<!-- 项目打包与发布 -->
+	<build>
+		<finalName>WebSpiderAdvanced4Job001</finalName>
+
+		<!-- <resources> <resource> <directory>src/main/resources</directory> <excludes> 
+			<exclude>spider.properties</exclude> <exclude>jdbc.properties</exclude> <exclude>log4j.properties</exclude> 
+			</excludes> </resource> </resources> -->
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>com.tianliangedu.job001.controller.SystemController</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 解决配置文件复制更新问题 -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<copy file="${ant-properties-path}" overwrite="true"
+									tofile="${project.build.directory}/jdbc.properties" />
+								<copy file="${ant-properties-path-spider}" overwrite="true"
+									tofile="${project.build.directory}/spider.properties" />
+								<copy file="${ant-properties-path-log4j}" overwrite="true"
+									tofile="${project.build.directory}/log4j.properties" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
