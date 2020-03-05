@@ -1,4 +1,4 @@
-package com.lxb;
+package com.lxb.ch05;
 
 import java.util.ArrayList;
 import java.util.Iterator;
