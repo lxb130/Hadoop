@@ -1,0 +1,19 @@
+(
+stu1
+,
+stu2
+)
+ 
+->
+Long
+.
+compare
+(
+stu2
+.
+getId
+(),
+ stu1
+.
+getId
+())
